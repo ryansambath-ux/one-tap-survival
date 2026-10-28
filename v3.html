@@ -70,7 +70,7 @@ document.getElementById('play').onclick=reset;
 // Original single-tap jump: one impulse per landing, with a sharp descent.
 function jump(){if(!playing)return;if(wallSide){wallSide=0;wallCooldown=.7;wallHeight=0;dy=0}if(y<.82){dy=9.5;holdTime=0}holding=true}
 function release(){holding=false}
-let touchX=0,touchStartX=0,pointerActive=false,gestureMoved=false,wallGestureReady=true;
+let touchX=0,touchStartX=0,pointerActive=false,gestureMoved=false;
 renderer.domElement.addEventListener('pointerdown',e=>{if(!playing)return;e.preventDefault();touchX=e.clientX;touchStartX=e.clientX;gestureMoved=false;pointerActive=true;jump();try{renderer.domElement.setPointerCapture(e.pointerId)}catch(_){}});
 renderer.domElement.addEventListener('pointermove',e=>{if(!playing||!pointerActive)return;const horizontal=e.clientX-touchStartX,delta=e.clientX-touchX;if(Math.abs(horizontal)>8){gestureMoved=true;release();targetX=THREE.MathUtils.clamp(targetX+delta/innerWidth*13,-4.65,4.65);if(wallGestureReady&&!wallSide&&wallCooldown<=0&&y<1.1&&Math.abs(horizontal)>innerWidth*.32&&Math.sign(horizontal)===Math.sign(targetX)){wallSide=Math.sign(horizontal);wallTime=0;wallGestureReady=false;dy=0}}touchX=e.clientX});
 renderer.domElement.addEventListener('pointerup',()=>{pointerActive=false;wallGestureReady=true;release()});
