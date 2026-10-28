@@ -37,7 +37,18 @@ case 9:add(1.7,2.3,1.5,-2,1.15);add(1.7,2.3,1.5,2,1.15);break;
 case 10:for(let i=-1;i<=1;i++)add(.65,2.4,1.5,i*(wide?2.5:1.1),1.2);break;
 case 11:add(2.5,2.5,2.5,0,1.25);break;
 }
-group.scale.setScalar(1);scene.add(group);obstacles.push({group,parts,kind,center,phase:Math.random()*6.28,passed:false,edgeMaterial:matEdge})}
+// Keep every obstacle within a fair horizontal footprint: at least one outer lane
+// remains clear at ground height, including the moving-block sway.
+const limit=kind===9?4.35:5.25;
+function bounds(){let left=Infinity,right=-Infinity;for(const p of parts){const half=p.ring?p.w/2:(p.angle?Math.abs(Math.cos(p.angle))*p.w/2+Math.abs(Math.sin(p.angle))*p.h/2:p.w/2);left=Math.min(left,p.px-half);right=Math.max(right,p.px+half)}return {left,right}}
+let footprint=bounds(),span=footprint.right-footprint.left;
+if(span>limit){const factor=limit/span;for(const p of parts){p.px*=factor;p.w*=factor;p.m.position.x*=factor;if(p.ring){p.m.scale.x*=factor}else if(p.pyramid){p.m.scale.x*=factor}else{p.m.scale.x*=factor}}footprint=bounds()}
+// Translate oversized patterns away from the track edge rather than silently
+// creating a full-width wall; collision coordinates follow the visual objects.
+const leftEdge=center+footprint.left,rightEdge=center+footprint.right;
+const shift=leftEdge< -4.1?-4.1-leftEdge:rightEdge>4.1?4.1-rightEdge:0;
+if(shift){group.position.x+=shift}
+scene.add(group);obstacles.push({group,parts,kind,center:group.position.x,phase:Math.random()*6.28,passed:false,edgeMaterial:matEdge})}
 
 function disposeObstacle(o){scene.remove(o.group);o.group.traverse(obj=>{if(obj.geometry&&obj.geometry!==obstacleBoxGeometry&&obj.geometry!==obstacleBoxEdges)obj.geometry.dispose()});o.edgeMaterial.dispose()}
 const energyRingGeo=new THREE.TorusGeometry(1.25,.13,10,40),energyRingMat=new THREE.MeshBasicMaterial({color:0x49ffff,toneMapped:false}),ringCoreMat=new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false});
