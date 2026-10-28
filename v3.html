@@ -42,7 +42,7 @@ case 11:add(2.5,2.5,2.5,0,1.25);break;
 const limit=kind===9?4.35:5.25;
 function bounds(){let left=Infinity,right=-Infinity;for(const p of parts){const half=p.ring?p.w/2:(p.angle?Math.abs(Math.cos(p.angle))*p.w/2+Math.abs(Math.sin(p.angle))*p.h/2:p.w/2);left=Math.min(left,p.px-half);right=Math.max(right,p.px+half)}return {left,right}}
 let footprint=bounds(),span=footprint.right-footprint.left;
-if(span>limit){const factor=limit/span;for(const p of parts){p.px*=factor;p.w*=factor;p.m.position.x*=factor;if(p.ring){p.m.scale.x*=factor}else if(p.pyramid){p.m.scale.x*=factor}else{p.m.scale.x*=factor}}footprint=bounds()}
+if(span>limit){const factor=limit/span;for(const p of parts){p.px*=factor;p.w*=factor;p.m.position.x*=factor;if(p.angle){p.h*=factor;p.m.scale.y*=factor}if(p.ring){p.m.scale.x*=factor}else if(p.pyramid){p.m.scale.x*=factor}else{p.m.scale.x*=factor}}footprint=bounds()}
 // Translate oversized patterns away from the track edge rather than silently
 // creating a full-width wall; collision coordinates follow the visual objects.
 const leftEdge=center+footprint.left,rightEdge=center+footprint.right;
