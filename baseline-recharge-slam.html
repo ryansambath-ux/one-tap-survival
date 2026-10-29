@@ -51,7 +51,7 @@ function jump(){if(!playing)return;if(y<.82){dy=9.5;holdTime=0}holding=true}
 function release(){holding=false}
 let touchX=0,touchY=0,moved=false;
 renderer.domElement.addEventListener('pointerdown',e=>{e.preventDefault();touchX=e.clientX;touchY=e.clientY;moved=false;jump()});
-renderer.domElement.addEventListener('pointermove',e=>{if(!playing||e.buttons===0)return;const vertical=e.clientY-touchY;if(y>.82&&vertical>35){holding=false;dy=-Math.max(35,Math.abs(dy));touchY=e.clientY;moved=true}const delta=e.clientX-touchX;if(Math.abs(delta)>8){moved=true;holding=false;targetX=THREE.MathUtils.clamp(targetX+delta/innerWidth*13,-3.45,3.45);touchX=e.clientX}});
+renderer.domElement.addEventListener('pointermove',e=>{if(!playing||e.buttons===0)return;const vertical=e.clientY-touchY;if(y>.82&&vertical>70){holding=false;dy=-22;touchY=e.clientY;moved=true}const delta=e.clientX-touchX;if(Math.abs(delta)>8){moved=true;holding=false;targetX=THREE.MathUtils.clamp(targetX+delta/innerWidth*13,-3.45,3.45);touchX=e.clientX}});
 renderer.domElement.addEventListener('pointerup',release);renderer.domElement.addEventListener('pointercancel',release);
 addEventListener('keydown',e=>{if(e.code==='ArrowLeft'||e.code==='KeyA')targetX=THREE.MathUtils.clamp(targetX-3.45,-3.45,3.45);if(e.code==='ArrowRight'||e.code==='KeyD')targetX=THREE.MathUtils.clamp(targetX+3.45,-3.45,3.45);if(e.code==='Space'){e.preventDefault();jump()}});addEventListener('keyup',e=>{if(e.code==='Space')release()});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
