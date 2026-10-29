@@ -12,19 +12,7 @@ const track=mesh(new THREE.BoxGeometry(11,.36,260),trackMat,0,-.25,-100);
 const rails=[];for(let x of [-5.55,5.55]){rails.push(mesh(new THREE.BoxGeometry(.13,.16,260),glowMat(0x48eaff),x,.02,-100));rails.push(mesh(new THREE.BoxGeometry(.1,.13,260),glowMat(0x6a75ff),x,10.35,-100))}
 // Fixed neon wall panels; camera stays on the approved chase settings.
 // Neon signs face the runner, not edge-on to the chase camera.
-const neonNames=['Ryan Sambath','Ryxe RyaNs 😎'];
-function neonSign(label,side,z){
- const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');
- g.clearRect(0,0,1024,256);g.textAlign='center';g.textBaseline='middle';
- g.fillStyle='#071129';g.fillRect(0,24,1024,208);
- g.strokeStyle='#32faff';g.lineWidth=10;g.shadowColor='#00eeff';g.shadowBlur=24;g.strokeRect(12,30,1000,196);
- g.font='bold 76px system-ui, sans-serif';g.shadowBlur=30;g.strokeStyle='#18dcff';g.lineWidth=5;g.strokeText(label,512,133);
- g.fillStyle='#ffffff';g.fillText(label,512,133);
- const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Mesh(new THREE.PlaneGeometry(7.8,1.95),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false,toneMapped:false}));
- m.position.set(side*5.05,3.8,z);m.rotation.y=side*.23;m.renderOrder=5;scene.add(m);
-}
-for(const side of [-1,1])for(let i=0;i<8;i++)neonSign(neonNames[i%2],side,-12-i*24);
+// Billboard signs removed to preserve clear view of the track.
 const laneLines=[];for(let z=-185;z<15;z+=7){for(let x of [-1.85,1.85])laneLines.push(mesh(new THREE.BoxGeometry(.07,.018,2.2),glowMat(0x3a91ff),x,-.056,z))}
 const orbGroup=new THREE.Group();scene.add(orbGroup);const orbMat=new THREE.MeshPhysicalMaterial({color:0xa5f7ff,metalness:.65,roughness:.08,clearcoat:1,clearcoatRoughness:.05,iridescence:1,iridescenceIOR:1.4,iridescenceThicknessRange:[100,750],emissive:0x2349a8,emissiveIntensity:.34});const orb=new THREE.Mesh(new THREE.SphereGeometry(.69,64,48),orbMat);orbGroup.add(orb);const core=mesh(new THREE.SphereGeometry(.48,24,16),new THREE.MeshBasicMaterial({color:0x92ffff,transparent:true,opacity:.14}),0,0,0);orbGroup.add(core);core.position.set(0,0,0);scene.remove(core);
 const surfaceMarks=new THREE.Group();orb.add(surfaceMarks);const markMat=new THREE.MeshBasicMaterial({color:0xff6bdc,transparent:true,opacity:.88});for(let i=0;i<5;i++){const mark=new THREE.Mesh(new THREE.BoxGeometry(.14,.025,.34),markMat);mark.position.set(Math.sin(i*2.4)*.43,.57,Math.cos(i*2.4)*.31);mark.rotation.y=i*1.2;surfaceMarks.add(mark)}const glint=new THREE.Mesh(new THREE.SphereGeometry(.105,12,8),new THREE.MeshBasicMaterial({color:0xffffff}));glint.position.set(.37,.39,.41);orb.add(glint);
